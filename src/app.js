@@ -1,9 +1,16 @@
 const express = require("express");
 
 const app = express()
-app.get("/user", (req, res) => { res.send("hello from user") })
+app.get("/user/:userID", (req, res,next) => {
+    console.log(req.params)
+   res.send("hello from user")
+   next();
+}, (req, res) => {
+    console.log(req.params)
+    res.send("hello from 2 user")
+}),
 
-app.post("/user", (req, res) => { res.send("hello from post") })
+    app.post("/user", (req, res) => { res.send("hello from post") })
 
 app.delete("/user", (req, res) => { res.send("hello from delete") })
 
