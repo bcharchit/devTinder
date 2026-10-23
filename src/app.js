@@ -1,19 +1,39 @@
 const express = require("express");
+const dbConnect = require("./config/database")
+const app = express();
+const User = require("./models/user")
 
-const app = express()
-app.get("/user/:userID", (req, res,next) => {
-    console.log(req.params)
-   res.send("hello from user")
-   next();
-}, (req, res) => {
-    console.log(req.params)
-    res.send("hello from 2 user")
-}),
 
-    app.post("/user", (req, res) => { res.send("hello from post") })
 
-app.delete("/user", (req, res) => { res.send("hello from delete") })
+app.post("/signup", async(req, res) => {
 
-app.use("/user", (req, res) => { res.send("hello from server") })
+    // creating a new user instance using the User model and the userObj data
+    const user = new User({
+        firstName: "Charchit",
+        lastName: "Bhandari",
+        emailId: "charchit12.bhandari@gmail.com",
+        password: "charchit12",
+        age: 22,
+        gender: "male"
 
-app.listen(3000, () => { console.log("server is listening successfully") })
+    });
+    try{
+     await user.save();
+     res.status(200).send("user saved successfully")
+    }catch(err){
+        res.status(500).send("error while saving user")
+    }
+   
+
+    
+
+})
+
+dbConnect().then(() => {
+    console.log("db connection successfull")
+    app.listen(3000, () => { console.log("server is listening successfully") })
+}).catch((err) => {
+    console.log("database connection failed")
+})
+
+
