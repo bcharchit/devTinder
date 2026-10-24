@@ -4,19 +4,11 @@ const app = express();
 const User = require("./models/user")
 
 
-
+app.use(express.json());
 app.post("/signup", async(req, res) => {
 
-    // creating a new user instance using the User model and the userObj data
-    const user = new User({
-        firstName: "Charchit",
-        lastName: "Bhandari",
-        emailId: "charchit12.bhandari@gmail.com",
-        password: "charchit12",
-        age: 22,
-        gender: "male"
-
-    });
+    //creating a new user instance using the User model and the userObj data
+    const user = new User(req.body);
     try{
      await user.save();
      res.status(200).send("user saved successfully")
