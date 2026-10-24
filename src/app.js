@@ -32,17 +32,41 @@ app.get("/user", async (req, res) => {
 
 })
 
+//delete user data
+app.delete("/user", async (req, res) => {
+    const userID = req.body.userId
+    try {
+        console.log("user id is", userID)
+        const user = await User.findByIdAndDelete({ _id: userID })
+        res.send("deleted successfully")
+    } catch (err) {
+        res.status(500).send("error while fetching user")
+    }
+})
 
+
+
+// update data of the user
+app.patch("/user", async (req, res) => {
+    const userID = req.body.userId;
+    const data = req.body
+    try {
+        const user = await User.findByIdAndUpdate({ _id: userID }, data, { returnDocument: 'before' })
+        res.send("user updated successfully")
+    } catch (err) {
+        res.status(500).send("error while updating user")
+    }
+})
 //feed api 
-app.get("/feed", async(req, res) => {
-try{
-const users= await User.find({})
-res.send(users)
-}catch(err){
-    res.status(500).send("error while fetching feed")
-}   
+app.get("/feed", async (req, res) => {
+    try {
+        const users = await User.find({})
+        res.send(users)
+    } catch (err) {
+        res.status(500).send("error while fetching feed")
+    }
 
-    
+
 
 
 
