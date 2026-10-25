@@ -13,7 +13,7 @@ app.post("/signup", async (req, res) => {
         await user.save();
         res.status(200).send("user saved successfully")
     } catch (err) {
-        res.status(500).send("error while saving user")
+        res.status(500).send(err.message)
     }
 
 
@@ -45,16 +45,16 @@ app.delete("/user", async (req, res) => {
 })
 
 
-
+    
 // update data of the user
 app.patch("/user", async (req, res) => {
     const userID = req.body.userId;
     const data = req.body
     try {
-        const user = await User.findByIdAndUpdate({ _id: userID }, data, { returnDocument: 'before' })
+        const user = await User.findByIdAndUpdate({ _id: userID }, data, { returnDocument: 'before',runValidators:true })
         res.send("user updated successfully")
     } catch (err) {
-        res.status(500).send("error while updating user")
+        res.status(500).send(err.message)
     }
 })
 //feed api 
