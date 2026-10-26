@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 
 const userSchema = new mongoose.Schema({
     firstName: {
@@ -15,8 +16,20 @@ const userSchema = new mongoose.Schema({
         unique: true,
         lowercase: true,
         trim: true,
+        validate(value) {
+            if (!validator.isEmail(value)) {
+                throw new Error("invalid email")
+            }
+        }
     }, password: {
         type: String,
+        validate(value) {
+            if (!validator.isStrongPassword(value)) {
+                throw new Error("password should be strong")
+            }
+
+
+        }
     },
     age: {
         type: Number,
@@ -24,25 +37,30 @@ const userSchema = new mongoose.Schema({
     },
     gender: {
         type: String,
-        validate(value){
-            if(!(["male","female","other"].includes(value))){
+        validate(value) {
+            if (!(["male", "female", "other"].includes(value))) {
                 throw new Error("gender should be male, female or other")
-            }   
+            }
 
         }
     },
-    photoUrl:{
+    photoUrl: {
         type: String,
-        default: "https://t4.ftcdn.net/jpg/02/44/43/69/360_F_244436923_vkMe10KKKiw5bjhZeRDT05moxWcPpdmb.jpg"
+        default: "https://t4.ftcdn.net/jpg/02/44/43/69/360_F_244436923_vkMe10KKKiw5bjhZeRDT05moxWcPpdmb.jpg",
+        validate(value) {
+            if (!validator.isURL(value)) {
+                throw new Error("invalid url")
+            }
+        }
     },
-    about:{
+    about: {
         type: String,
         default: "Hey there! I am using DevTinder"
     },
-    skills:{
+    skills: {
         type: [String],
     },
-    
-},{timestamps:true});
 
-module.exports=mongoose.model("User",userSchema);;
+}, { timestamps: true });
+
+module.exports = mongoose.model("User", userSchema);;
